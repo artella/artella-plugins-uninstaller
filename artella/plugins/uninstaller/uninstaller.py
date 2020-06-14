@@ -44,8 +44,6 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
 
         do_remove_install_folder = not artella.DccPlugin().dev
 
-        loader.shutdown()
-
         valid_uninstall = self._uninstall(artella_path)
         if not valid_uninstall:
             msg = 'Artella uninstall process was not completed!'.format(artella_path)
@@ -54,6 +52,8 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
             else:
                 logger.error(msg)
             return False
+
+        loader.shutdown()
 
         if do_remove_install_folder:
             try:
