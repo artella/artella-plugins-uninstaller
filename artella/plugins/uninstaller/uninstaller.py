@@ -9,12 +9,14 @@ from __future__ import print_function, division, absolute_import
 
 import os
 import sys
+import logging
 
 import artella
-from artella import dcc
-from artella import logger
-from artella import loader
+import artella.dcc as dcc
+import artella.loader as loader
 from artella.core import plugin, utils, qtutils
+
+logger = logging.getLogger('artella')
 
 
 class UninstallerPlugin(plugin.ArtellaPlugin, object):
@@ -32,7 +34,7 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
             if show_dialogs:
                 artella.DccPlugin().show_warning_message(text=msg)
             else:
-                logger.log_warning(msg)
+                logger.warning(msg)
             return False
 
         res = qtutils.show_question_message_box(
@@ -40,14 +42,27 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
         if not res:
             return False
 
+        do_remove_install_folder = not artella.DccPlugin().dev
+
+        loader.shutdown()
+
         valid_uninstall = self._uninstall(artella_path)
         if not valid_uninstall:
             msg = 'Artella uninstall process was not completed!'.format(artella_path)
             if show_dialogs:
                 artella.DccPlugin().show_error_message(text=msg)
             else:
-                logger.log_error(msg)
+                logger.error(msg)
             return False
+
+        if do_remove_install_folder:
+            try:
+                logger.info('Removing Artella Dcc Plugin directory: {}'.format(artella_path))
+                utils.delete_folder(artella_path)
+            except Exception as exc:
+                logger.warning(
+                    'Impossible to remove Artella Dcc plugin directory: {} | {}'.format(artella_path, exc))
+                return False
 
         if os.path.isdir(artella_path):
             msg = 'Artella folder was not removed during uninstall process.\n\n{}\n\n Remove it manually if you' \
@@ -55,10 +70,8 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
             if show_dialogs:
                 dcc.show_info('Artella Uninstaller', msg)
             else:
-                logger.log_info(msg)
+                logger.info(msg)
             utils.open_folder(os.path.dirname(artella_path))
-
-        loader.shutdown()
 
         # Cleanup artella directories from
         artella_dir = os.path.dirname(artella_path)
@@ -68,7 +81,7 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
             if sys_path in sys_paths:
                 paths_to_remove.append(sys_path)
                 sys.path.remove(sys_path)
-            elif 'artella-plugins' in sys_path:
+            elif 'artella-plugins' in sys_path or 'artella-dccs' in sys_path:
                 paths_to_remove.append(sys_path)
         for path_to_remove in paths_to_remove:
             if path_to_remove not in sys.path:
@@ -78,12 +91,4 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
         return True
 
     def _uninstall(self, artella_path):
-        if not artella.DccPlugin().dev:
-            try:
-                utils.delete_folder(artella_path)
-            except Exception as exc:
-                logger.log_warning(
-                    'Impossible to remove Artella Dcc plugin directory: {} | {}'.format(artella_path, exc))
-                return False
-
         return True
