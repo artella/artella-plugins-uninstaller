@@ -1,13 +1,13 @@
 {
-    "icon": "",
     "menu": {
         "id": "artella-plugins-uninstaller",
         "command": "import artella; plug = artella.PluginsMgr().get_plugin_by_id('artella-plugins-uninstaller'); plug.uninstall()",
         "tags": ["artella", "uninstall"],
         "label": "Uninstall",
-        "icon": ""
+        "parents": ["More Artella"]
     },
     "name": "Uninstall",
     "package": "Artella",
-    "resources": "resources"
+    "resources": "resources",
+    "icon": "uninstaller.png"
 }

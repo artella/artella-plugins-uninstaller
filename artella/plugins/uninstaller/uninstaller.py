@@ -53,7 +53,7 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
                 logger.error(msg)
             return False
 
-        loader.shutdown()
+        loader.shutdown(dev=False)
 
         if do_remove_install_folder:
             try:
