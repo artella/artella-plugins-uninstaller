@@ -33,11 +33,15 @@ class UninstallerMayaPlugin(uninstaller.UninstallerPlugin, object):
         module_files_to_remove = list()
         maya_module_paths = maya_module_paths.split(';')
         for maya_module_path in maya_module_paths:
-            module_files = os.listdir(maya_module_path)
-            for module_file in module_files:
-                if module_file in ARTELLA_MOD_NAMES:
-                    module_file_to_remove = os.path.join(maya_module_path, module_file)
-                    module_files_to_remove.append(module_file_to_remove)
+            if maya_module_path and os.path.isdir(maya_module_path):
+                try:
+                    module_files = os.listdir(maya_module_path)
+                    for module_file in module_files:
+                        if module_file in ARTELLA_MOD_NAMES:
+                            module_file_to_remove = os.path.join(maya_module_path, module_file)
+                            module_files_to_remove.append(module_file_to_remove)
+                except Exception as exc:
+                    continue
         if not module_files_to_remove:
             logger.warning('No Artella Maya module file found ...')
             return False
