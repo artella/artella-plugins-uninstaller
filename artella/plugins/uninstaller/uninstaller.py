@@ -38,7 +38,9 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
             return False
 
         res = qtutils.show_question_message_box(
-            'Artella Uninstaller', 'Are you sure you want to uninstall Artella Plugin?')
+            'Artella Uninstaller',
+            'All plugins will be removed.\n\nArtella plugin will not be accessible by any DCC after uninstall.\n\n'
+            'Are you sure you want to uninstall Artella Plugin?')
         if not res:
             return False
 
