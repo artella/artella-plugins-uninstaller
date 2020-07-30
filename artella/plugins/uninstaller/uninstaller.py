@@ -67,7 +67,7 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
                 return False
 
         if os.path.isdir(artella_path):
-            msg = 'Artella folder was not removed during uninstall process.\n\n{}\n\n Remove it manually if you' \
+            msg = 'Artella folder was not removed during uninstall process.\n\n{}\n\n Remove it manually if you ' \
                   'want to have a complete clean uninstall of Artella plugin.'.format(artella_path)
             if show_dialogs:
                 dcc.show_info('Artella Uninstaller', msg)
