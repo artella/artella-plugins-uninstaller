@@ -31,7 +31,8 @@ class UninstallerMayaPlugin(uninstaller.UninstallerPlugin, object):
             return False
 
         module_files_to_remove = list()
-        maya_module_paths = maya_module_paths.split(';')
+
+        maya_module_paths = maya_module_paths.split(os.pathsep)
         for maya_module_path in maya_module_paths:
             if maya_module_path and os.path.isdir(maya_module_path):
                 try:
