@@ -1,5 +1,5 @@
 include versioneer.py
-include artella-plugin.json
+include artella/plugins/uninstaller/artella-plugin.json
 include artella/plugins/uninstaller/_version.py
-recursive-include artella/plugins/uninstaller/resources/* *.*
+include artella/plugins/uninstaller/resources/uninstaller.png
 recursive-exclude * *.py[co]
