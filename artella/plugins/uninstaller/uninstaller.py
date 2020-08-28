@@ -75,6 +75,12 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
                 logger.info(msg)
             utils.open_folder(os.path.dirname(artella_path))
 
+        # Remove specific DCC install folder if exists
+        root_dcc_install_dir = os.path.dirname(os.path.dirname(os.path.dirname(artella_path)))
+        dcc_install_dir = os.path.join(root_dcc_install_dir, dcc.name())
+        if os.path.isdir(dcc_install_dir):
+            utils.delete_folder(dcc_install_dir)
+
         # Cleanup artella directories from
         artella_dir = os.path.dirname(artella_path)
         sys_paths = [artella_path, artella_dir, utils.clean_path(artella_path), utils.clean_path(artella_dir)]
