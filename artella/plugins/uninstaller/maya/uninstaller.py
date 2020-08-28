@@ -54,7 +54,16 @@ class UninstallerMayaPlugin(uninstaller.UninstallerPlugin, object):
                 continue
             valid_remove = utils.delete_file(module_file_to_remove)
             if not valid_remove:
-                logger.info('Was impossible to remove Artella module file: {}'.format(module_file_to_remove))
+                logger.error('Was impossible to remove Artella module file: {}'.format(module_file_to_remove))
                 break
+            else:
+                logger.info('Artella Maya module files: {} removed successfully!'.format(module_file_to_remove))
+
+        # We also make sure that we remove the userSetup.py file
+        user_setup_py_file = os.path.join(os.path.dirname(artella_path), 'userSetup.py')
+        if os.path.isfile(user_setup_py_file):
+            removed_user_setup = utils.delete_file(user_setup_py_file)
+            if not removed_user_setup:
+                logger.warning('Was impossible to remove Artella userSetup.py file: {}!'.format(removed_user_setup))
 
         return valid_remove
