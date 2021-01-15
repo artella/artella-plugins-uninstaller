@@ -12,9 +12,10 @@ import sys
 import logging
 
 import artella
-import artella.dcc as dcc
+from artella import api
+from artella import dcc
 import artella.loader as loader
-from artella.core import plugin, utils, qtutils
+from artella.core import plugin, utils, qtutils, dccplugin
 
 logger = logging.getLogger('artella')
 
@@ -32,7 +33,7 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
         if not os.path.isdir(artella_path):
             msg = 'Artella folder "{}" does not exists!'.format(artella_path)
             if show_dialogs:
-                artella.DccPlugin().show_warning_message(text=msg)
+                api.show_warning_message(text=msg)
             else:
                 logger.warning(msg)
             return False
@@ -44,13 +45,13 @@ class UninstallerPlugin(plugin.ArtellaPlugin, object):
         if not res:
             return False
 
-        do_remove_install_folder = not artella.DccPlugin().dev
+        do_remove_install_folder = not dccplugin.DccPlugin().dev
 
         valid_uninstall = self._uninstall(artella_path)
         if not valid_uninstall:
             msg = 'Artella uninstall process was not completed!'.format(artella_path)
             if show_dialogs:
-                artella.DccPlugin().show_error_message(text=msg)
+                api.show_error_message(text=msg)
             else:
                 logger.error(msg)
             return False
